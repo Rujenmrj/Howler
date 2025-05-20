@@ -44,6 +44,12 @@ app.get('/', (req, res) => {
     res.send(`message sent${a}`);
 });
 
+app.get('/chat/:$id', (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    res.send(chats);
+});
+
 server.listen(3000, () => {
     console.log('running on http://localhost:3000');
 });
