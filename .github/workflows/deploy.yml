@@ -31,10 +31,10 @@ jobs:
       #     docker build -t ${{ secrets.DOCKER_USERNAME }}/howler-server:${{ env.VERSION }} ./server
       #     docker tag ${{ secrets.DOCKER_USERNAME }}/howler-server:${{ env.VERSION }} ${{ secrets.DOCKER_USERNAME }}/howler-server:latest
 
-      # - name: Push frontend images
-      #   run: |
-      #     docker push ${{ secrets.DOCKER_USERNAME }}/howler-client:${{ env.VERSION }}
-      #     docker push ${{ secrets.DOCKER_USERNAME }}/howler-client:latest
+      - name: Push frontend images
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/howler-client:${{ env.VERSION }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/howler-client:latest
 
       # - name: Push backend images
       #   run: |
