@@ -2,6 +2,7 @@ import express from 'express';
 import http from 'node:http';
 import { Server } from 'socket.io';
 import connectDB  from './db.js';
+import { Howl, User } from './db.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -44,11 +45,27 @@ app.get('/', (req, res) => {
     res.send(`message sent${a}`);
 });
 
-app.get('/chat/:$id', (req, res) => {
-    const { id } = req.params;
-    console.log(id);
-    res.send(chats);
+
+app.post('/user', async (req, res) => {
+    const { name, password } = req.body;
+    console.log(name, password);
+
+    if (name && password) {
+        const user = new User({ name, password });
+
+        try {
+            await user.save(); // modern way
+            res.status(200).json({ message: 'User created successfully' });
+        } catch (err) {
+            console.error('Error saving user:', err);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+
+    } else {
+        res.status(400).json({ message: 'Missing name or password' });
+    }
 });
+
 
 server.listen(3000, () => {
     console.log('running on http://localhost:3000');
