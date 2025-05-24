@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 import { computed, onMounted, onUnmounted, reactive } from 'vue';
 import axios from 'axios';
 
-// const API_URL = 'http://localhost:3000/api/messages';
+const API_URL = 'https://howls.rujenm.com.np/';
 
 // const fetchMessages = async () => {
 //   try {
@@ -17,24 +17,31 @@ import axios from 'axios';
 
 const socket = io('https://howls.rujenm.com.np');
 const state = reactive({
-  messages: [],
+  user: {
+    socketID: '',
+    name: '',
+  },
   tosend: '',
   received : [],
-  isSeeder: true,
   room: '',
 });
 
-const reversedMessages = computed(() => {
-  return [...state.received].reverse();
-});
 
 onMounted(() => {
   socket.on('connect', () => {
     console.log('Connected to server');
   });
+  axios.get(`${API_URL}chat/global`, { timeout: 10000 })
+    .then(response => { 
+      state.received = response.data;
+      console.log('Fetched messages:', state.received);
+    })
+    .catch(error => {
+      console.error('Error fetching messages:', error);
+    });
 });
 socket.on('receive', (data) => {
-  state.received.push(data);
+  state.received.unshift(data);
 });
 const send = () => {
   if (state.tosend !== '') {
@@ -44,8 +51,7 @@ const send = () => {
 }
 
 const overlayform = () => {
-  state.room = 'customroom'
-  socket.emit('join', state.room);
+  alert('This feature is not implemented yet. Please check back later!');
 }
 </script>
 
@@ -54,8 +60,12 @@ const overlayform = () => {
     <div class="w-16">
       <img src="/logo.png" alt="howler logo" class="mb-10 md:mb-0">
     </div>
-    <div class="flex items-center">
+    <div class="flex items-center" v-if="state.user.name != ''">
       <button @click="overlayform" class="mr-10 rounded-xl bg-blue-400 px-8 py-2 font-bold text-white">Create Chat</button>
+      <button @click="overlayform" class="mr-10 rounded-xl bg-blue-400 px-8 py-2 font-bold text-white">Join Chat</button>
+    </div>
+    <div class="flex items-center" v-else >
+      <button @click="overlayform" class="mr-10 rounded-xl bg-blue-400 px-8 py-2 font-bold text-white">Login</button>
     </div>
   </div>
 
@@ -67,7 +77,10 @@ const overlayform = () => {
 
   <div class="flex md:items-center justify-center text-4xl mt-10 flex-col">
      <div class="flex flex-col md:w-2/4 p-10 gap-y-4">
-       <span v-for="text in reversedMessages" :key="text"  class="bg-gray-600/50 rounded-xl inline py-3 px-3">{{ text }}</span>
+       <span v-for="text in state.received" :key="text"  class="bg-gray-600/50 rounded-xl inline py-3 px-3">
+        <span class="font-extrabold pb-1 block">{{ text.poster.socketID }}</span><br>
+        {{ text.message }}
+      </span>
      </div>
   </div>
 </template>

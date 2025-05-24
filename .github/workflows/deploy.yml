@@ -3,7 +3,7 @@ name: Docker CI/CD with Versioning
 on:
   push:
     tags:
-      - 'v*'  # Triggers only when a version tag like v1.2 is pushed
+      - 'v*'
 
 jobs:
   build-and-push:
@@ -24,19 +24,17 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/howler-client:${VERSION} ./client
           docker tag ${{ secrets.DOCKER_USERNAME }}/howler-client:${VERSION} ${{ secrets.DOCKER_USERNAME }}/howler-client:latest
 
-
-      #backend not ready yet
-      # - name: Build backend
-      #   run: |
-      #     docker build -t ${{ secrets.DOCKER_USERNAME }}/howler-server:${{ env.VERSION }} ./server
-      #     docker tag ${{ secrets.DOCKER_USERNAME }}/howler-server:${{ env.VERSION }} ${{ secrets.DOCKER_USERNAME }}/howler-server:latest
+      - name: Build backend
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/howler-server:${{ env.VERSION }} ./server
+          docker tag ${{ secrets.DOCKER_USERNAME }}/howler-server:${{ env.VERSION }} ${{ secrets.DOCKER_USERNAME }}/howler-server:latest
 
       - name: Push frontend images
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/howler-client:${VERSION}
           docker push ${{ secrets.DOCKER_USERNAME }}/howler-client:latest
 
-      # - name: Push backend images
-      #   run: |
-      #     docker push ${{ secrets.DOCKER_USERNAME }}/howler-server:${{ env.VERSION }}
-      #     docker push ${{ secrets.DOCKER_USERNAME }}/howler-server:latest
+      - name: Push backend images
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/howler-server:${{ env.VERSION }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/howler-server:latest
