@@ -33,7 +33,6 @@ io.on('connection', (socket) => {
             message: data,
         });
         try {
-            howl.init();
             await howl.save();
             // console.log('Howl saved successfully');
         } catch (err) {
