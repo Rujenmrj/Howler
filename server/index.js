@@ -43,7 +43,10 @@ io.on('connection', (socket) => {
             poster: {'socketID': socket.id, 'objID': null },
             message: data,
         });
-        socket.broadcast.emit('receive', data);
+        socket.broadcast.emit('receive', {
+            poster: {'socketID': socket.id, 'objID': null },
+            message: data,
+        });
     });
     socket.on('join', (room) => {
         // console.log(`User joined room: ${room}`);
