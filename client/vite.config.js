@@ -3,10 +3,10 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './',
+  base: '/',
   server: {
     port: 5001,
-    allowedHosts: ["howler.rujenm.com.np"],
+    allowedHosts: ["howlers.rujenm.com.np"],
   },
   plugins: [vue()],
 })

@@ -26,11 +26,11 @@ app.use(express.static('public'));
 
 io.on('connection', (socket) => {
     console.log('A user connected');
-    console.log(socket.id);
+    console.log(socketID);
     socket.on('send', async (data) => {
         
         const howl = new Howl({
-            poster: {'socketID': socket.id, 'objID': null },   
+            poster: {'socketID': socketID, 'objID': null },   
             message: data,
         });
         try {
@@ -40,9 +40,9 @@ io.on('connection', (socket) => {
         } catch (err) {
             console.error('Error saving howl:', err);
         }
-        // console.log(`from socket id:${socket.id}:${data}`);
+        // console.log(`from socket id:${socketID}:${data}`);
         socket.emit('receive', {
-            poster: {'socketID': socket.id, 'objID': null },
+            poster: {'socketID': socketID, 'objID': null },
             message: data,
         });
         socket.broadcast.emit('receive', data);
