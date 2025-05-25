@@ -26,11 +26,10 @@ app.use(express.static('public'));
 
 io.on('connection', (socket) => {
     console.log('A user connected');
-    console.log(socketID);
     socket.on('send', async (data) => {
         
         const howl = new Howl({
-            poster: {'socketID': socketID, 'objID': null },   
+            poster: {'socketID': socket.id, 'objID': null },   
             message: data,
         });
         try {
@@ -42,7 +41,7 @@ io.on('connection', (socket) => {
         }
         // console.log(`from socket id:${socketID}:${data}`);
         socket.emit('receive', {
-            poster: {'socketID': socketID, 'objID': null },
+            poster: {'socketID': socket.id, 'objID': null },
             message: data,
         });
         socket.broadcast.emit('receive', data);
