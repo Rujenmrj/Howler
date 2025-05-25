@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 import { computed, onMounted, onUnmounted, reactive } from 'vue';
 import axios from 'axios';
 
-const isdev = flase;
+const isdev = false;
 
 const API_URL = !isdev ? 'https://howls.rujenm.com.np/':'http://localhost:3000/';
 
